@@ -1,10 +1,19 @@
-import React, { useState } from "react";
-import Icone from "./assets/Lista.png";
+import React, { useState, useEffect } from "react";
+import Icone from "./assets/note.png";
 
 function TodoList() {
-  const [lista, setLista] = useState([]);
-  const [novoItem, setNovoItem] = useState([]);
+  
+  const listaStorage = localStorage.getItem("Lista");
 
+  const [lista, setLista] = useState(
+    listaStorage ? JSON.parse(listaStorage) : []
+  );
+  const [novoItem, setNovoItem] = useState("");
+  
+  useEffect(() => {
+    localStorage.setItem("Lista", JSON.stringify(lista));
+  }, [lista]);
+  
   function adicionaItem(form) {
     form.preventDefault();
     if (!novoItem) {
@@ -14,22 +23,26 @@ function TodoList() {
     setNovoItem("");
     document.getElementById("inputEntrada").focus();
   }
-
+  
   function clicou(index) {
     const listaAux = [...lista];
     listaAux[index].isCompleted = !listaAux[index].isCompleted;
     setLista(listaAux);
   }
-
+  
   function deleta(index) {
     const listaAux = [...lista];
     listaAux.splice(index, 1);
     setLista(listaAux);
   }
-
+  
+  function deletaTudo() {
+    setLista([]);
+  }
+  
   return (
     <div className="bg-black flex flex-col items-center w-screen h-screen">
-      <h1 className="text-azulMedio text-4xl font-lora mt-8 mb-8">
+      <h1 className="text-laranjaMedio text-4xl font-lora mt-8 mb-8">
         Lista de Tarefas
       </h1>
       <div className="flex items-end justify-center w-full">
@@ -39,7 +52,7 @@ function TodoList() {
         >
           <input
             id="inputEntrada"
-            className="input input-bordered input-accent bg-black text-white w-full max-w-md mt-2 ml-2"
+            className="input input-bordered rounded-e-sm input-info bg-black text-white w-full xl:w-3/4 sm:w-3/4 mt-2 ml-2"
             type="text"
             value={novoItem}
             onChange={(e) => {
@@ -47,27 +60,33 @@ function TodoList() {
             }}
             placeholder="Adicione uma tarefa"
           />
-          <button className="btn btn-success mt-2 mr-2" type="submit">
+          <button
+            className="btn rounded-s-sm bg-azulMedio hover:bg-azulEscuro mt-2 mr-2"
+            type="submit"
+          >
             Adicione
           </button>
         </form>
       </div>
-      <div id="listaTarefas" className="flex flex-col w-full m-4">
-        <div className="flex justify-around">
+      <div
+        id="listaTarefas"
+        className="flex flex-col items-center m-4"
+      >
+        <div className="flex flex-col xl:w-3/4 sm:w-3/4 items-center ">
           {lista.length < 1 ? (
-            <img className="w-1/2" src={Icone} />
+            <img className="flex sm:w-1/2 md:w-1/3" src={Icone} />
           ) : (
             lista.map((item, index) => (
               <div
                 key={index}
                 id={item.isCompleted ? "item completo" : "item"}
-                className="flex flex-col w-full"
+                className="flex flex-row justify-between items-center w-full mt-4"
               >
                 <span
                   onClick={() => {
                     clicou(index);
                   }}
-                  className="w-full text-white text-2xl mt-2 ml-8"
+                  className="flex-wrap overflow-hidden bg-neutral hover:bg-neutral-600 text-2xl text-white mt-8"
                 >
                   {item.text}
                 </span>
@@ -76,29 +95,25 @@ function TodoList() {
                     deleta(index);
                   }}
                   id="del"
-                  className="btn btn-outline btn-error mt-2 mr-8"
+                  className="btn btn-outline btn-error m-4"
                 >
                   Deletar
                 </button>
               </div>
             ))
           )}
+          {lista.length > 0 && (
+            <button
+              onClick={() => {
+                deletaTudo();
+              }}
+              id="deleteAll"
+              className="btn p-4 border-error bg-black hover:bg-error text-error hover:text-white m-8"
+            >
+              Deletar Todas
+            </button>
+          )}
         </div>
-
-        {/* <div id="itemCompleto" className="flex justify-around">
-          <span className="w-full text-neutral-500 line-through text-opacity-20 text-2xl mt-2 ml-2">
-            Tarefa de exemplo
-          </span>
-          <button className="btn btn-outline btn-error opacity-20 m-2">
-            Deletar
-          </button>
-        </div> */}
-      </div>
-      <div
-        id="deleteAll"
-        className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl p-4 border-error bg-black hover:bg-error text-error hover:text-white"
-      >
-        Deletar Todas
       </div>
     </div>
   );
