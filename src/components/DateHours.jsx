@@ -9,7 +9,7 @@ class DateHours extends React.Component {
 
   render() {
     return (
-      <div className='text-white right-5 absolute'>
+      <div className='text-white right-5 top-10 absolute z-50'>
         <p>{this.state.date}</p>
       </div>
     );

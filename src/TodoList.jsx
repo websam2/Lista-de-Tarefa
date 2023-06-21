@@ -40,8 +40,8 @@ function TodoList() {
   }
 
   return (
-    <div className="bg-neutral-50 flex flex-col items-center w-screen h-screen">
-      <div className="w-full flex flex-row justify-center bg-azulEscuro shadow-md">
+    <div className="flex flex-col items-center w-screen h-screen z-20">
+      <div className="w-full flex flex-row justify-center bg-info-content shadow-md">
         <h1 className="text-white text-3xl font-lora mt-8 mb-4">
           Lista de Tarefas
         </h1>
