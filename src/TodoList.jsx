@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Icone from "./assets/note.png";
-import moment from "moment";
 
 function TodoList() {
   const listaStorage = localStorage.getItem("Lista");
